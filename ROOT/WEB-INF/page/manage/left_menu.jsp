@@ -51,6 +51,7 @@
 					<li><a href="/projects/state/2" >完成项目</a></li>
 					<li><a href="/projects/free/1" >空闲项目</a></li>
 					<li><a href="/projects/state/3" >失败项目</a></li>
+					<li><a href="/project_search.html" >查找</a></li>
 				</ul>
 			</div>
 			<div class="menu-item">

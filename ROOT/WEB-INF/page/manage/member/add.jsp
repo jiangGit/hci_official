@@ -9,7 +9,8 @@
 	<div>
 		<form action="/member/0" method="post" id="">
 			<div>
-				<label>学号：</label> <input type="text" name="member.studentId">
+				<label>学号：</label> <input type="text" id="studentId" name="member.studentId">
+				<a href="javascript:checkout();" >查找</a>
 			</div>
 
 			<div>
@@ -100,6 +101,15 @@
 		</form>
 
 	</div>
+
+<script type="text/javascript">
+	function checkout(){
+		var id=document.getElementById("studentId").value;
+		window.location.href="/member/checkout/"+id;
+		
+	}
+
+</script>
 
 </body>
 </html>

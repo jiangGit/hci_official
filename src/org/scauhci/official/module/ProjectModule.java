@@ -67,8 +67,7 @@ public class ProjectModule {
 		try {
 			if (id == 0) {
 				project.setState(Project.STATE_DEVELOPING);
-				project.setStateDate(new java.sql.Date(new java.util.Date()
-						.getTime()));
+				project.setStateDate(new java.sql.Date(new java.util.Date().getTime()));
 				projectService.add(project);
 			} else {
 				Project p = projectService.fetch(id);
@@ -271,6 +270,17 @@ public class ProjectModule {
 		}
 		map.put("state", "ok");
 
+		return map;
+	}
+	
+	@At("/project/search/")
+	@Ok("jsp:page.manage.project.list")
+	public Map<String, Object> search(@Param("wd") String s, @Param("page") int page){
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("list", projectLucene.searchIndex(s,memberService.dao().createPager(page,Config.MANAGER_PAGE_SIZE)));
+		map.put("count", projectLucene.countSearchIndex(s));
+		map.put("size", Config.MANAGER_PAGE_SIZE);
+		map.put("page", page);
 		return map;
 	}
 

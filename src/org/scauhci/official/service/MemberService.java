@@ -84,8 +84,16 @@ public class MemberService extends BasicMysqlService<Member>{
 		return this.getList(Cnd.where("role", "=", Member.ROLE_ADMIN), pager);
 	}
 	
+	public boolean isExist(String id){
+		return this.getEntity(Cnd.where("student_id", "=", id),null)!=null;
+	}
+	
 	public Member getMember(int id){
 		return this.getEntity(Cnd.where("id", "=", id), "extend");
+	}
+	
+	public Member getMember(String id){
+		return this.getEntity(Cnd.where("student_id", "=", id), "extend");
 	}
 	
 	public List<Member> find(String s){

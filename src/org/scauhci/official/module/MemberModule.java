@@ -16,6 +16,7 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.lang.Files;
 import org.nutz.mvc.annotation.AdaptBy;
 import org.nutz.mvc.annotation.At;
+import org.nutz.mvc.annotation.Fail;
 import org.nutz.mvc.annotation.GET;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.POST;
@@ -36,6 +37,7 @@ import org.scauhci.official.util.PrintImage;
 import org.scauhci.official.util.Utils;
 
 @IocBean
+@Fail("json")
 public class MemberModule {
 
 	@Inject
@@ -278,9 +280,24 @@ public class MemberModule {
 	}
 
 	@At("/member/checkout/?")
-	@Ok("json")
-	public Member checkout(@Param("id") String id){
-		return GetInfoUtil.getMember(id);
+	@Ok("jsp:page.manage.member.edit")
+	public void checkout(String id,HttpServletRequest req){
+		Member member ;
+		MemberExtend me;
+		DepartmentMember dm ;
+		if(memberService.isExist(id)){
+			member = memberService.getMember(id);
+			me = member.getExtend();
+			dm = departmentService.getDepartmentMember(member.getId());
+		}else{
+			member =GetInfoUtil.getMember(id);
+			me = member.getExtend();
+			dm = new DepartmentMember();
+		}	
+		req.setAttribute("member", member);
+		req.setAttribute("extend", me);
+		req.setAttribute("departmentList", departmentService.getAll());
+		req.setAttribute("departmentMember", dm);
 	}
 
 	@At("/member/search/")
