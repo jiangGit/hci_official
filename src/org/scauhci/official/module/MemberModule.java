@@ -8,8 +8,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-
+import org.nutz.dao.Cnd;
 import org.nutz.ioc.aop.Aop;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -55,7 +56,7 @@ public class MemberModule {
 
 	@At("/member/edit/?")
 	@Ok("jsp:page.manage.member.edit")
-	public void toEidt(int id, HttpServletRequest req) {
+	public void toEdit(int id, HttpServletRequest req) {
 		Member member = memberService.getMember(id);
 		MemberExtend me = member.getExtend();
 		DepartmentMember dm = departmentService.getDepartmentMember(member.getId());
@@ -69,7 +70,7 @@ public class MemberModule {
 	@At("/member/?")
 	@Ok("json")
 	@Aop("transactionInterceptor")
-	public Map<String, Object> eidt(int id, @Param("::member.") final Member member,
+	public Map<String, Object> edit(int id, @Param("::member.") final Member member,
 			@Param("::extend.") final MemberExtend me,
 			@Param("::departmentMember.") final DepartmentMember dm,
 			HttpServletRequest req) {
@@ -277,6 +278,21 @@ public class MemberModule {
 		}
 		map.put("state", "ok");
 		return map;
+	}
+	
+	@At("/login")
+	@Ok("json")
+	public Map<String, Object> login(String account, String password, HttpSession session) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Member member = memberService.fetch(Cnd.where("student_id", "=", account).and("password", "=", password));
+		if(member == null) {
+			result.put("state", 300);
+		} else {
+			session.setAttribute("member", member);
+			result.put("state", 200);
+			result.put("member", member);
+		}
+		return result;
 	}
 
 	@At("/member/checkout/?")
